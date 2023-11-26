@@ -1,9 +1,9 @@
 import { pool } from "../../config/db.config.js";
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { confirmMission, getMissionID, insertMissionSql } from "./mission.sql.js";
+import { confirmMission, getMissionID, insertMissionSql, getMissionByRestaurant, getMissionByRestaurantAtFirst } from "./mission.sql.js";
 
-// Review 데이터 삽입
+// 데이터 삽입
 export const addMission = async (data) => {
     try{
         const conn = await pool.getConnection();
@@ -25,7 +25,7 @@ export const addMission = async (data) => {
     }
 }
 
-// Review 정보 얻기
+// 정보 얻기
 export const getMission = async (missionData) => {
     try {
         const conn = await pool.getConnection();
@@ -40,6 +40,25 @@ export const getMission = async (missionData) => {
         conn.release();
         return mission;
         
+    } catch (err) {
+        throw new BaseError(status.PARAMETER_IS_WRONG);
+    }
+}
+
+export const getMissionList = async (cursorId, size, restaurant_id) => {
+    try {
+        const conn = await pool.getConnection();
+
+        if(cursorId == "undefined" || typeof cursorId == "undefined" || cursorId == null){
+            const [missions] = await pool.query(getMissionByRestaurantAtFirst, [parseInt(restaurant_id), parseInt(size)]);
+            conn.release();
+            return missions;
+    
+        }else{
+            const [missions] = await pool.query(getMissionByRestaurant, [parseInt(restaurant_id), parseInt(cursorId), parseInt(size)]);
+            conn.release();
+            return missions;    
+        }
     } catch (err) {
         throw new BaseError(status.PARAMETER_IS_WRONG);
     }

@@ -7,3 +7,14 @@ export const getMissionID =
 export const confirmMission =
         "SELECT EXISTS(SELECT 1 FROM mission WHERE restaurant_id = ? AND price = ?) AS isExistMission";
 
+export const getMissionByRestaurant = 
+        "SELECT mission_id, price, point "
+        + "FROM mission "
+        + "WHERE restaurant_id = ? AND mission_id < ? "
+        + "ORDER BY mission_id DESC LIMIT ? ;"
+        
+export const getMissionByRestaurantAtFirst = 
+        "SELECT mission_id, price, point "
+        + "FROM mission "
+        + "WHERE restaurant_id = ? "
+        + "ORDER BY mission_id DESC LIMIT ? ;"

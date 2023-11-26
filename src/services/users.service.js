@@ -1,9 +1,7 @@
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { reviewResponseDTO } from "../dtos/users.dto.js"
-import { addReview, getReview} from "../models/users.dao.js";
-
-const id = 1;
+import { reviewResponseDTO, reviewListResponseDTO } from "../dtos/users.dto.js"
+import { addReview, getReview, getReviewList} from "../models/users.dao.js";
 
 export const joinReview = async (body) => {
     const today = new Date();
@@ -22,4 +20,8 @@ export const joinReview = async (body) => {
     }else{
         return reviewResponseDTO(await getReview(joinReviewData));
     }
+}
+
+export const findReview = async (body) => {
+    return reviewListResponseDTO(await getReviewList(body.cursorId, body.size, body.user_id));
 }

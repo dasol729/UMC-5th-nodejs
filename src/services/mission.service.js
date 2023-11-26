@@ -1,7 +1,7 @@
 import { BaseError } from "../../config/error.js";
 import { status } from "../../config/response.status.js";
-import { missionResponseDTO } from "../dtos/mission.dto.js"
-import { addMission, getMission } from "../models/mission.dao.js";
+import { missionResponseDTO, missionListResponseDTO } from "../dtos/mission.dto.js"
+import { addMission, getMission, getMissionList } from "../models/mission.dao.js";
 
 export const joinMission = async (body) => {
     //const today = new Date();
@@ -18,4 +18,8 @@ export const joinMission = async (body) => {
     }else{
         return missionResponseDTO(await getMission(joinMissionData));
     }
+}
+
+export const findMission = async (body) => {
+    return missionListResponseDTO(await getMissionList(body.cursorId, body.size, body.restaurant_id));
 }
